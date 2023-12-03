@@ -1,31 +1,8 @@
 <?php
 $servername = "localhost";
 $username = "root";
-$password = "";
+$password = ""; 
 
-function isUsernameTaken($conn, $username)
-{
-    $stmt = $conn->prepare("SELECT * FROM users WHERE username = ?");
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $stmt->store_result();
-    $count = $stmt->num_rows;
-    $stmt->close();
-
-    return $count > 0;
-}
-
-function isEmailTaken($conn, $email)
-{
-    $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $stmt->store_result();
-    $count = $stmt->num_rows;
-    $stmt->close();
-
-    return $count > 0;
-}
 $conn = new mysqli($servername, $username, $password);
 
 if ($conn->connect_error) {

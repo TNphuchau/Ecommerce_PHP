@@ -1,35 +1,39 @@
-<?php
-require_once('../../validation/regex_patterns.php');
+<?php 
+require_once('../Controller/UserController.php');
 require_once('../../config/DbConnection.php');
+$userController = new UserController($conn);
+$error = 'null';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  $email = $_POST['email'];
-  $username = $_POST['username'];
-  $password = $_POST['password'];
-  $confirmPassword = $_POST['confirmPassword'];
-  if (isUsernameTaken($conn, $username)) {
-    $error = "Username đã tồn tại. Vui lòng chọn username khác.";
-  } elseif (isEmailTaken($conn, $email)) {
-    $error = "Email đã được sử dụng. Vui lòng chọn email khác.";
-  }
-  elseif (!preg_match($strongRegex, $password) && !preg_match($mediumRegex, $password)) {
-    $error = "Mật khẩu yếu. Vui lòng chọn mật khẩu mạnh hơn.";
-  } elseif ($password !== $confirmPassword) {
-    $error = "Mật khẩu và mật khẩu xác nhận không khớp";
-  } else {
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-    $sql = "INSERT INTO users (email, username, password) VALUES ('$email', '$username', '$hashedPassword')";
-    
-    if ($conn->query($sql) === TRUE) {
-      header('Location: login.php?success=true');
-      exit();
-    } else {
-      $error = "Đã có lỗi xảy ra: " . $conn->error;
+    if (isset($_POST['action'])) {
+        if ($_POST['action'] == 'register') {
+            $result = $userController->registerUser(
+                $_POST['username'],
+                $_POST['email'],
+                $_POST['password'],
+                $_POST['confirmPassword']
+            );
+
+            if ($result == "success") {
+              header('Location: loginRegister.php?success=true');
+              exit();
+          } else {
+              $_SESSION['error'] = $result;
+              header('Location: loginRegister.php');
+              exit();
+          }
+        } elseif ($_POST['action'] == 'login') {
+            $result = $userController->loginUser($_POST['emailLogin'], $_POST['passwordLogin']);
+            if ($result == "success") {
+              header('Location: ../../index.php');
+              exit();
+          } else {
+              $_SESSION['error'] = $result;
+              header('Location: loginRegister.php');
+              exit();
+          }
+        }
     }
-  }
-  $conn->close();
 }
-
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -70,22 +74,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
   <br><br><br>
   <div class="cont">
-    <div class="form sign-in">
+    <form method="POST" action="loginRegister.php" class="form sign-in">
       <h2>Welcome back,</h2>
       <label>
-        <span>Email</span>
-        <input type="email" />
+        <span>Email or username</span>
+        <input type="text" name="emailLogin" required />
       </label>
       <label>
         <span>Password</span>
-        <input type="password" />
+        <input type="password" name="passwordLogin" required />
       </label>
       <p class="forgot-pass">Forgot password?</p>
-      <button type="button" class="submit">Sign In</button>
+      <button type="submit" name="action" value="login" class="submit">Sign In</button>
       <button type="button" class="fb-btn">
         Connect with <span>facebook</span>
       </button>
-    </div>
+    </form>
     <div class="sub-cont">
       <div class="img">
         <div class="img__text m--up">
@@ -106,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       </div>
 
 
-      <form method="POST" class="form sign-up" action="login.php" onsubmit="return validateForm();">
+      <form method="POST" class="form sign-up" action="loginRegister.php" onsubmit="return validateForm();">
         <h2>Time to feel like home,</h2>
         <label>
           <span>Username</span>
@@ -129,7 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
           <input type="password" id="confirmPassword" name="confirmPassword" class="form-control form-control-xl" required placeholder="confirmPassword">
         </label>
 
-        <button type="submit" class="submit">Sign Up</button>
+        <button type="submit" class="submit" name="action" value="register" >Sign Up</button>
         <button type="button" class="fb-btn">
           Join with <span>facebook</span>
         </button>
@@ -181,17 +185,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         return false;
       }
     }
-    var urlParams = new URLSearchParams(window.location.search);
-    var successParam = urlParams.get('success');
-    var error = "<?php echo isset($_SESSION['error']) ? $_SESSION['error'] : ''; ?>";
-
   </script>
-  <?php if (!empty($error)) : ?>
-    <script>
-        var errorMessage = <?php echo json_encode($error); ?>;
+<script>
+    <?php if (!empty($_SESSION['error'])) : ?>
+        var errorMessage = <?php echo json_encode($_SESSION['error']); ?>;
         alert(errorMessage);
-    </script>
-<?php endif  ?>
+        <?php unset($_SESSION['error']); ?>
+    <?php endif; ?>
+
+    <?php if (isset($_GET['success']) && $_GET['success'] === 'true') : ?>
+        var successMessage = "Registration successful!";
+        alert(successMessage);
+    <?php endif; ?>
+</script>
 
 </body>
 
