@@ -67,16 +67,35 @@ public function loginUser($identifier, $password)
 }
 
 
-    private function insertUser($user)
-    {
-        $sql = "INSERT INTO users (email, username, password) VALUES (?, ?, ?)";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("sss", $user->getEmail(), $user->getUsername(), $user->getPassword());
-        $result = $stmt->execute();
-        $stmt->close();
+private function insertUser($user)
+{
+    $sql = "INSERT INTO users (email, username, password) VALUES (?, ?, ?)";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bind_param("sss", $user->getEmail(), $user->getUsername(), $user->getPassword());
+    $result = $stmt->execute();
 
-        return $result;
+    if ($result) {
+        $userId = $stmt->insert_id;
+
+        //admin role id = 2
+        $defaultRoleValue = 2;
+
+        $roleSql = "INSERT INTO userPermission VALUES (?, ?)";
+        $roleStmt = $this->conn->prepare($roleSql);
+        $roleStmt->bind_param("ii", $userId, $defaultRoleValue);
+        $roleResult = $roleStmt->execute();
+
+        if (!$roleResult) {
+   
+        }
+
+        $roleStmt->close();
     }
+
+    $stmt->close();
+
+    return $result;
+}
 
     private function getUserByEmail($email)
     {
