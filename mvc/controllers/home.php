@@ -20,13 +20,13 @@ class home extends controller
         $data_index = $this->MyController->indexCustomers();
         $product = $this->ProductModels->select_array('*',['publish' => 1],'id desc');
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $email = $_POST['email'];
+            $email = "transon1023@gmail.com";
             $arrayAdd = [
                 'email'         => $email,
                 'created_at'    => gmdate('Y-m-d H:i:s', time() + 7*3600)
             ];
             $this->ContactModels->add($arrayAdd);
-            $mail = $this->SendMail->send('Nhận thông tin sản phẩm',$email, 'Đây là nội dung', 'zzskillzzzz@gmail.com');
+            // $mail = $this->SendMail->send('Nhận thông tin sản phẩm',$email, 'Đây là nội dung', 'zzskillzzzz@gmail.com');
             if($email){
                 $redirect = new redirect('/');
                 $redirect->setFlash('flash', 'Gửi mail nhận thông tin thành công!');

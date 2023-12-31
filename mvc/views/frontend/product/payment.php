@@ -46,8 +46,7 @@
         </div>
         <div class="payment_cart">
             <h3>Thông tin liên hệ</h3>
-            <form action="" method="post">
-
+            <form action="" method="post" enctype="application/x-www-form-urlencoded" id="paymentForm">
                 <div class="item">
                     <div>
                         <?php if (!empty($provinces) && is_array($provinces)) { ?>
@@ -59,19 +58,19 @@
                         <?php } else { ?>
                             <input type="text" name="data_post[province]" class="form-control" placeholder="Tỉnh" required />
                         <?php } ?>
-
                     </div>
                 </div>
 
-                <!-- <div class="item">
-                <select name="data_post[district]" id="district" required>
-                                <?php foreach ($districts as $district) {
-                                    if ($district['province_code'] == $selectedProvince) { ?>
-                                        <option value="<?= $district['code'] ?>"><?= $district['name'] ?></option>
-                                <?php }
-                                } ?>
-                            </select>
-                </div> -->
+                <div class="item">
+                    <div>
+                        <input type="radio" name="data_post[payment_method]" value="momo" id="momoPayment" required>
+                        <label for="momoPayment">Thanh toán Momo QR</label>
+                    </div>
+                    <div>
+                        <input type="radio" name="data_post[payment_method]" value="cash" id="cashOnDelivery" required>
+                        <label for="cashOnDelivery">Thanh toán khi nhận hàng</label>
+                    </div>
+                </div>
 
                 <div class="item">
                     <div>
@@ -91,7 +90,7 @@
                 </div>
                 <div class="item">
                     <div>
-                        <input type="text" name="data_post[email]" value="<?= $data_index['user']['email'] ?>" class="form-control" placeholder="email" required />
+                        <input type="email" name="data_post[email]" value="<?= $data_index['user']['email'] ?>" class="form-control" placeholder="email" required />
                     </div>
                 </div>
                 <div class="item">
@@ -121,7 +120,7 @@
             .then(response => response.json())
             .then(districts => {
                 var districtDropdown = document.getElementById('district');
-                districtDropdown.innerHTML = ''; 
+                districtDropdown.innerHTML = '';
                 districts.forEach(function(district) {
                     var option = document.createElement('option');
                     option.value = district.code;
@@ -130,6 +129,16 @@
                 });
             }).catch(error => console.error('Error:', error));
     });
+
+    document.getElementById('momoPayment').addEventListener('change', function() {
+        if (this.checked) {
+            document.getElementById('paymentForm').action = 'cart/MomoPayment';
+        }
+    });
+
+    document.getElementById('cashOnDelivery').addEventListener('change', function() {
+        if (this.checked) {
+            document.getElementById('paymentForm').action = 'cart/payment';
+        }
+    });
 </script>
-
-
