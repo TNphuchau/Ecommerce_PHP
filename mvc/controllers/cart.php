@@ -128,7 +128,7 @@ class cart extends controller
                 'note'          => $data_post['note'],
                 'total'         => $total,
                 'created_at'    => gmdate('Y-m-d H:i:s', time() + 7 * 3600),
-                'payment_method' => $data_post['payment_method'], // Assuming the payment method is in the form data
+                'payment_method' => $data_post['payment_method'], 
             ];
 
             $orderAdd = $this->OrderModels->add($arrayOrders);
@@ -156,9 +156,6 @@ class cart extends controller
                 $contents .= '<p>Tổng hóa đơn: ' . number_format($total) . 'đ</p>';
                 $this->OrderDetailModels->addMultiple($arrayOrderDetail);
 
-                // Check if the selected payment method is Momo, then redirect
-               
-                    // Continue with other payment methods or processing
                     $mail = $this->SendMail->send('Order', $data_post['email'], $contents, 'transon1023@gmail.com');
                     unset($_SESSION['cart']);
 
@@ -199,7 +196,7 @@ class cart extends controller
         $partnerCode = 'MOMOBKUN20180529';
         $accessKey = 'klm05TvNBzhg7h7j';
         $secretKey = 'at67qH6mk8w5Y1nAyMoYKMWACiEi2bsa';
-        $orderInfo = "Thanh toán qua MoMo";
+        $orderInfo = "Thanh toán qua momo mua điện thoại tại website";
         $amount = $total;
         $orderId = time() . "";
         $redirectUrl = "https://webhook.site/b3088a6a-2d17-4f8d-a383-71389a6c600b";
