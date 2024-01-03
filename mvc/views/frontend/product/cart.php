@@ -1,4 +1,5 @@
 <link rel="stylesheet" href="public/build/css/cart.css">
+<br><br><br><br><br><br>
 <section class="cart__container">
     <div class="container">
         <div class="cart">
@@ -75,6 +76,7 @@
         <?php } ?>
     </div>
 </section>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 <script>
 // Click +,- qty product
 const plus = document.querySelectorAll('.plus');

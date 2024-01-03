@@ -1,4 +1,5 @@
 <link rel="stylesheet" href="public/build/css/detail.css">
+<br><br><br><br><br><br><br><br>
 <section class="detail__product">
     <div class="container">
         <div class="block__product">
@@ -94,6 +95,7 @@
         <?php } ?>
     </div>
 </section>
+<br><br><br><br><br><br><br><br>
 <script>
 // Click +,- qty product
 const plus = document.querySelector('.plus');

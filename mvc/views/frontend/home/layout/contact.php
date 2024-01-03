@@ -1,4 +1,4 @@
-<!-- form liên hệ -->
+<!-- form liên hệ
 <section class="contact">
     <div class="container">
         <div class="formContact">
@@ -15,4 +15,4 @@
             </form>
         </div>
     </div>
-</section>
+</section> -->

@@ -1,7 +1,7 @@
 <?php require_once './mvc/views/frontend/home/layout/slide.php' ?>
 <!-- sản phẩm -->
 <?php if(isset($product) && $product != NULL){?>
-<section class="product">
+<section class="product" style="WIDTH: 80%;margin: auto;">
     <div class="container">
         <div class="title__product">
             <h3>Sản phẩm</h3>
@@ -16,7 +16,7 @@
                     <div class="contents">
                         <a href="<?= $value['slug'] ?>">
                             <p class="title"><?= $value['name'] ?></p>
-                            <p class="price">
+                            <p class="price" style="text-align: center;margin: 20px;">
                                 <!-- <s>200.000 đ</s> -->
                                 <span><?= number_format($value['price']).'đ'; ?></span>
                             </p>

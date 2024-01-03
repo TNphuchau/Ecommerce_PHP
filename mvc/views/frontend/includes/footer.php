@@ -5,100 +5,43 @@
 ?>
 <section class="footer">
     <div class="container">
-        <div class="list_items">
-            <div class="item">
-                <h3>SHOPPING</h3>
-                <div class="info__company">
-                    <p><strong>Website:</strong><a href="#"></a>Website</p>
-                    <p><strong>Địa chỉ:</strong>Quận 9</p>
-                    <p><strong>Số điện thoại:</strong><a href="tel:113114115">113.114.115</a></p>
-                </div>
-            </div>
-            <div class="item">
-                <h3>Danh mục sản phẩm</h3>
-                <ul>
-                    <li><a href="">Iphone</a></li>
-                    <li><a href="">SamSung</a></li>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <ul class="social">
+                    <li><a href="#"><i class="fab fa-facebook"></i></a></li>
+                    <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                    <li><a href="#"><i class="fab fa-linkedin"></i></a></li>
+                    <li><a href="#"><i class="fa fa-rss"></i></a></li>
+                    <li><a href="#"><i class="fab fa-dribbble"></i></a></li>
                 </ul>
             </div>
-            <div class="item">
-                <h3>Chính sách</h3>
-                <ul>
-                    <li><a href="">Chính sách mua hàng</a></li>
-                    <li><a href="">Chính sách đổi trả</a></li>
-                </ul>
-            </div>
-            <div class="item">
-                <h3>Bài viết</h3>
-                <ul>
-                    <li><a href="">Công nghệ</a></li>
-                    <li><a href="">Kỹ thuật</a></li>
-                </ul>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <p class="copyright">Sarah &copy; 2023&emsp; Hỗ trợ&emsp; Quyền riêng tư&emsp; Liên hệ</p>
             </div>
         </div>
     </div>
 </section>
-<div class="show__cart">
-    <div class="header"> <button class="close__cart">Đóng</button></div>
-    <div class="list__items_cart">
-        <?php if(isset($data_index['cart']) && $data_index !== NULL){?>
-        <?php foreach($data_index['cart'] as $key => $val){?>
-        <div class="item">
-            <div class="box__one">
-                <div class="image">
-                    <img src="<?= $val['image'] ?>" alt="">
-                </div>
-                <div class="name__product">
-                    <p><?= $val['name'] ?> </p>
-                    <p><?= number_format($val['price']) ?> đ</p>
-                </div>
-            </div>
-            <div class="box__two">
-                <p>Số lượng: <span><?= $val['qty'] ?></span></p>
-            </div>
-            <div class="box__tree">
-                <a href="javascript:void(0)" onClick="deleteItem(<?= $val['productID'] ?>)"><i
-                        data-id="<?= $val['productID'] ?>" class="fa-solid fa-trash"></i></a>
-            </div>
-        </div>
-        <?php } ?>
-        <?php } ?>
-    </div>
-    <div class="box">
-        <p><strong>Tổng giá:</strong><span id="total_Price_header">
-                <?php $total = 0; if(isset($data_index['cart']) && $data_index !== NULL){?>
-                <?php foreach($data_index['cart'] as $key => $val){?>
-                <?php $total = $total + $val['price']* $val['qty']; ?>
-                <?php } ?>
-                <?php } ?>
-                <?= number_format($total); ?>
-                đ</span></p>
-        <a class="goto_cart" href="gio-hang.html">
-            Vào giỏ hàng
-        </a>
-    </div>
-</div>
-<?php if(isset($_SESSION['flash'])){?>
-
 <div class="message">
     <p class="text-success"><?= $redirect->setFlash('flash');  ?></p>
 </div>
-<?php } ?>
+<?php ?>
 
 <footer>
     <div class="container">
         <p>@NF TEAM</p>
     </div>
 </footer>
-<div class="rings__phone">
+<!-- <div class="rings__phone">
     <div class="b1 box__phone"></div>
     <div class="b2 box__phone"></div>
     <div class="box__phone phone">
         <a href="tel:0982824398" title="0982824398"><i class="fas fa-phone-alt"></i></a>
     </div>
-</div>
+</div> -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
-<script>
+<!-- <script>
 $('.slick_slide').slick({
     arrows: false,
     fade: true,
@@ -190,7 +133,7 @@ Number.prototype.format = function(n, x) {
     var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
     return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
 }
-</script>
+</script> -->
 </body>
 
 </html>
