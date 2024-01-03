@@ -9,6 +9,7 @@ $Routes["dang-nhap.html"] = 'auth/signin';
 $Routes["dang-xuat.html"] = 'auth/logout';
 $Routes["thanh-toan.html"] = 'cart/payment';
 $Routes["thanh-toan-momo.html"] = 'cart/MomoPayment';
+$Routes["chi-tiet-don-hang"] = 'cart/OrderDetail';
 $Routes["thong-tin-chung.html"] = 'auth/info';
 $Routes["doi-mat-khau.html"] = 'auth/changePassWord';
 $Routes["cpanel/login.html"] = 'cpanel/auth/index';
