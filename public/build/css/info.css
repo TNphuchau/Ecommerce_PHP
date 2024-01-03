@@ -7,7 +7,7 @@ body {
     box-sizing: border-box;
     min-height: 100vh;
     position: relative;
-    background: #635959;
+    background: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -22,7 +22,7 @@ body {
 .info__container .container .form h3 {
     text-align: center;
     font-size: 2em;
-    background: linear-gradient(to right, rgb(231, 225, 226),rgb(244, 224, 244));
+    background: black;
     -webkit-text-fill-color: transparent;
     -webkit-background-clip: text;
     margin: 0;
@@ -31,31 +31,11 @@ body {
     position: relative;
     width: 100%;
     height: 100%;
-    box-shadow: 10px 10px 10px #d5bfbf, -8px -8px 10px #d5bfbf;
+    background-image: linear-gradient(127deg, #ffbff4 0%, #8cfffbb8 91%);
+    box-shadow: 10px 10px 10px #dfadad, -8px -8px 10px #d5bfbf;
     padding: 15px;
+    border-radius: 10px;
     z-index: 2;
-    backdrop-filter: blur(15px);
-}
-.info__container::before{
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    clip-path: circle(500px at 10% 10%);
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to right, rgb(232, 64, 100), rgb(136, 204, 26));
-}
-.info__container::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    clip-path: circle(500px at 90% 90%);
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to right, rgb(232, 64, 100), rgb(163, 206, 93));
-    z-index: -1;
 }
 
 .info__container .container .form .row {
@@ -70,7 +50,7 @@ body {
     overflow: hidden;
 }
 .info__container .container .form .row .col-6 label{
-    color: #fff;
+    color: #000;
     margin-bottom: 5px;
     display: inline-block;
 }
