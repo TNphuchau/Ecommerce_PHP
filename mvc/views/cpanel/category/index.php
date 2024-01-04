@@ -55,7 +55,7 @@
                                 <?php foreach($val['children'] as $key_child => $val_child){?>
                                     <tr class="even<?= $val_child['id'] ?> pointer">
                                         <td class=""><input type="checkbox" name="foo" value="<?= $val_child['id'] ?>"></td>
-                                        <td class=""> --------------- <?= $val_child['name'] ?></td>
+                                        <td class=""> <?= $val_child['name'] ?></td>
                                         <td class=""><input type="checkbox" onclick="checkPublish(<?= $val_child['id'] ?>,'publish')" id="publish<?= $val_child['id'] ?>" data-control="<?= $data['template'] ?>" <?= $val_child['publish'] == 1?'checked':'' ?>></td>
                                         <td class=""><?= date('d/m/Y' , strtotime($val_child['created_at'])) ?></td>
                                         <td>

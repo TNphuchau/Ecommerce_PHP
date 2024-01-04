@@ -28,6 +28,13 @@
                 <li><a href="">Trang chủ</a></li>
                 <li><a href="">Sản phẩm</a></li>
                 <li><a href="">Liên hệ</a></li>
+                <div class="cntr" style="margin-right: 60px;">
+                  <div class="cntr-innr">
+                    <label class="search" for="inpt_search">
+                      <input id="inpt_search" type="text" />
+                    </label>
+                  </div>
+                </div>
               </ul>
 
               <?php if (isset($_SESSION['user']) && $data_index['user'] !== null) { ?>
@@ -97,9 +104,9 @@
   const profile = document.querySelector("nav .profile");
   const imgProfile = profile.querySelector("img");
   const dropdownProfile = profile.querySelector(".profile-link");
-
   imgProfile.addEventListener("click", function() {
     dropdownProfile.classList.toggle("show");
   });
-  
 </script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>

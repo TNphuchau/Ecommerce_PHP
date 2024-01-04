@@ -11,7 +11,6 @@
   th,
   td {
     padding: $table-cell-padding;
-    vertical-align: top;
     border-top: $table-border-width solid $table-border-color;
   }
 
@@ -71,10 +70,16 @@
 //
 // Default zebra-stripe styles (alternating gray and transparent backgrounds)
 
+$background-color_1: #e9fcff69;
+
 .table-striped {
-  tbody tr:nth-of-type(#{$table-striped-order}) {
-    background-color: $table-accent-bg;
-  }
+	tbody {
+		tr {
+			&:nth-of-type(odd) {
+				background-color: $background-color_1;
+			}
+		}
+	}
 }
 
 
