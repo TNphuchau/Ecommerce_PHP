@@ -128,13 +128,14 @@ class cart extends controller
                 'note'          => $data_post['note'],
                 'total'         => $total,
                 'created_at'    => gmdate('Y-m-d H:i:s', time() + 7 * 3600),
-                'payment_method' => $data_post['payment_method'], 
+                'payment_method' => $data_post['payment_method'],
             ];
 
             $orderAdd = $this->OrderModels->add($arrayOrders);
             $resultsOrders = json_decode($orderAdd, true);
 
             if ($resultsOrders['type'] === 'sucessFully') {
+                $_SESSION['last_order_id'] = $resultsOrders['id'];
                 $arrayOrderDetail = [];
                 $contents = '<h3>Sản Phẩm đã đặt:</h3></br>';
 
@@ -156,14 +157,13 @@ class cart extends controller
                 $contents .= '<p>Tổng hóa đơn: ' . number_format($total) . 'đ</p>';
                 $this->OrderDetailModels->addMultiple($arrayOrderDetail);
 
-                    $mail = $this->SendMail->send('Order', $data_post['email'], $contents, 'transon1023@gmail.com');
-                    unset($_SESSION['cart']);
+                $mail = $this->SendMail->send('Order', $data_post['email'], $contents, 'transon1023@gmail.com');
+                unset($_SESSION['cart']);
 
-                    if ($mail) {
-                        $redirect = new redirect('/');
-                        $redirect->setFlash('flash', 'Đặt hàng thành công!');
-                    }
-                
+                if ($mail) {
+                    $redirect = new redirect('cart/OrderDetail');
+                    $redirect->setFlash('flash', 'Đặt hàng thành công!');
+                }
             }
         }
         $provinceModel = new ProvinceModels();
@@ -188,6 +188,7 @@ class cart extends controller
             'data_index'    => $data_index,
             'title'        => 'Thanh toán',
         ];
+
         $endpoint = "https://test-payment.momo.vn/v2/gateway/api/create";
         $total = 0;
         foreach ($this->MyController->getCart() as $key => $value) {
@@ -199,17 +200,64 @@ class cart extends controller
         $orderInfo = "Thanh toán qua momo mua điện thoại tại website";
         $amount = $total;
         $orderId = time() . "";
-        $redirectUrl = "https://webhook.site/b3088a6a-2d17-4f8d-a383-71389a6c600b";
-        $ipnUrl = "https://webhook.site/b3088a6a-2d17-4f8d-a383-71389a6c600b";
+        $redirectUrl = "http://localhost/shopping/cart/OrderDetail";
+        $ipnUrl = "http://localhost/shopping/cart/OrderDetail";
         $extraData = "";
 
 
         if (!empty($_POST)) {
+            if ($_SERVER['REQUEST_METHOD'] == "POST") {
+                $data_post = $_POST['data_post'];
+                $total = 0;
+                foreach ($this->MyController->getCart() as $key => $value) {
+                    $total += $value['price'] * $value['qty'];
+                }
+
+                $arrayOrders = [
+                    'accountId'     => $this->MyController->getUsers()['id'],
+                    'address'       => $data_post['address'],
+                    'phone'         => $data_post['phone'],
+                    'email'         => $data_post['email'],
+                    'note'          => $data_post['note'],
+                    'total'         => $total,
+                    'created_at'    => gmdate('Y-m-d H:i:s', time() + 7 * 3600),
+                    'payment_method' => $data_post['payment_method'],
+                ];
+
+                $orderAdd = $this->OrderModels->add($arrayOrders);
+                $resultsOrders = json_decode($orderAdd, true);
+
+                if ($resultsOrders['type'] === 'sucessFully') {
+                    $arrayOrderDetail = [];
+                    $contents = '<h3>Sản Phẩm đã đặt:</h3></br>';
+                    $_SESSION['last_order_id'] = $resultsOrders['id'];
+                    foreach ($this->MyController->getCart() as $key => $value) {
+                        array_push($arrayOrderDetail, [
+                            'orderId'   => $resultsOrders['id'],
+                            'productId' => $value['productID'],
+                            'price'     => $value['price'],
+                            'qty'       => $value['qty']
+                        ]);
+
+                        $contents .= '
+                    <div>Tên sản phẩm: ' . $value['name'] . '</div></br>
+                    <div>Số lượng: ' . $value['qty'] . '</div></br>
+                    <div>Đơn giá:' . number_format($value['price']) . 'đ</div></br>
+                ';
+                    }
+
+                    $contents .= '<p>Tổng hóa đơn: ' . number_format($total) . 'đ</p>';
+                    $this->OrderDetailModels->addMultiple($arrayOrderDetail);
+
+                    $mail = $this->SendMail->send('Order', $data_post['email'], $contents, 'transon1023@gmail.com');
+                    unset($_SESSION['cart']);
+                }
+            }
             $partnerCode = $partnerCode;
             $accessKey = $accessKey;
             $secretKey = $secretKey;
-            $orderId = time() . ""; 
-            $orderInfo = "Đây là thanh toán";
+            $orderId = time() . "";
+            $orderInfo = $orderInfo;
             $amount = $amount;
             $ipnUrl = $ipnUrl;
             $redirectUrl = $redirectUrl;
@@ -236,9 +284,44 @@ class cart extends controller
                 'signature' => $signature
             );
             $result = execPostRequest($endpoint, json_encode($data));
-            $jsonResult = json_decode($result, true);  
-
+            $jsonResult = json_decode($result, true);
             header('Location: ' . $jsonResult['payUrl']);
+        }
+    }
+
+    function OrderDetail()
+    {
+        $orderId = $_SESSION['last_order_id'] ?? null;
+
+        if ($orderId) {
+            $orderDetails = $this->OrderDetailModels->select_array('*', ['orderId' => $orderId]);
+            $products = [];
+
+            foreach ($orderDetails as $detail) {
+                $productId = $detail['productId'];
+                $productInfo = $this->ProductModels->select_row('*', ['id' => $productId]);
+                if ($productInfo) {
+                    $products[] = [
+                        'productName' => $productInfo['name'],
+                        'qty' => $detail['qty'],
+                        'price' => $detail['price'],
+                    ];
+                }
+            }
+
+            $order = $this->OrderModels->select_row('*', ['id' => $orderId]);
+
+            $data = [
+                'page'                 => 'product/OrderDetail',
+                'title'                => 'Chi tiết hoá đơn',
+                'order'                => $order,
+                'groupedOrderDetails'  => $products,  
+                'data_index'           => $this->MyController->indexCustomers(),
+            ];
+
+            $this->viewFrontEnd('frontend/masterlayout', $data);
+        } else {
+       
         }
     }
 }
